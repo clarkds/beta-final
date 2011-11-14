@@ -1,0 +1,33 @@
+ //.include "jsim/nominal.jsim"
+ //.include "jsim/stdcell.jsim"
+// .include "lab6regfile.jsim" 
+
+** Main regfile subckt
+.subckt regfile clk werf ra2sel ra[4:0] rb[4:0] rc[4:0] wasel_data[4:0]
+	+ wdata[31:0] radata[31:0] rbdata[31:0]
+
+
+Xra2sel_mux ra2sel#5 rb[4:0] rc[4:0] ra2mux[4:0] mux2   // select rb / rc by ra2sel
+
+Xregfile
+	+ vdd 0 0 ra[4:0] sub_adata[31:0]    // A read port
+	+ vdd 0 0 ra2mux[4:0] sub_bdata[31:0] // B read port
+	+ 0 clk werf wasel_data[4:0] wdata[31:0]  // write port
+	+ $memory width=32 nlocations=31
+
+Xra_1 ra[4:1] ra_no1 nand4
+Xinv_a ra_no1 ra_o1 inverter
+Xra_2 ra_o1 ra[0] ra_pren nand2
+Xinv_a1 ra_pren ra_out inverter_4
+//Xbufra ra_pre ra_out buffer_4
+Xra_mux ra_out#32 sub_adata[31:0] 0#32 radata[31:0] mux2
+
+Xrb_1 ra2mux[4:1] rb_no1 nand4
+Xinv_b rb_no1 rb_o1 inverter
+Xrb_2 rb_o1 ra2mux[0] rb_pren nand2
+Xinv_b1 rb_pren rb_out inverter_4
+//Xbufrb rb_pre rb_out buffer_4
+Xrb_mux rb_out#32 sub_bdata[31:0] 0#32 rbdata[31:0] mux2
+
+.ends
+

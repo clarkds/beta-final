@@ -1,0 +1,138 @@
+**************************
+** PC+4 optimized adder **
+**************************
+//.include "jsim/nominal.jsim"
+//.include "jsim/stdcell.jsim"
+//.include "pc_incr_check.jsim"
+
+.subckt pc_increment pc_in[31:0] pc4_out[31:0]
+Xba b[31:3] constant0
+xbb b[2] constant1
+Xbc b[1:0] constant0
+
+Xadd4 pc_in[31:0] b[31:0] pc4_out[31:0] PC_ARITH
+.ends
+
+******
+*PFA**
+*****
+*Partial Full Adder: inputs (a,b,c) outputs (p,g,s)
+** for b = 0
+.subckt PC_PFAa a b c p s
+//Xxor1 a p buffer
+Xxor2 p c s xor2
+.ends
+
+*Partial Full Adder: inputs (a,b,c) outputs (p,g,s)
+** for b = 1
+.subckt PC_PFAb a b c p s
+Xxor1 a p inverter
+Xxor2 p s buffer
+.ends
+
+********
+**CLA4**
+********
+*4_block carry lookahead adder: inputs (c0,a,b) outputs (P_out,G_out)
+**for low order bits [3:0]
+.subckt PC_CLA_add4l a[3:0] b[3:0] c0 s[3:0] P_out G_out
+Xa2_1 c1 constant0
+Xc2_1 ca constant0
+Xa3_1 c2 constant0
+Xb2_1 a2 c3 buffer
+Xa2_4 p3 a2 nG_out nand2
+Xinv_a nG_out G_out inverter
+Xa4_2 p3 p2 p1 p0 nP_out nand4
+Xinv_b nP_out P_out inverter
+Xa_p a3 a[1:0] p3 p[1:0] join
+xpfa_seta a3 b3 c3 p3 s3 PC_PFAa
+xpfa_setb a2 b2 c2 p2 s2 PC_PFAb
+xpfa_setc a1 b1 c1 p1 s1 PC_PFAa
+xpfa_setd a0 b0 ca p0 s0 PC_PFAa
+.ends
+
+*4_block carry lookahead adder: inputs (c0,a,b) outputs (P_out,G_out)
+**for high order bits [31:4]
+.subckt PC_CLA_add4h a[3:0] b[3:0] c0 s[3:0] P_out G_out
+Xa2_1 a0 c0 nc1 nand2
+Xa3_1 a1 a0 c0 nc2 nand3
+Xa4_1 a2 a1 a0 c0 nc3 nand4
+Xa4_2 a3 a2 a1 a0 nP_out nand4
+Xinv_a nc[3:1] nP_out c[3:1] P_out inverter
+Xa_p a[3:0] p[3:0] join
+Xinv_b a[3:0] c[3:0] na[3:0] n_c[3:0] inverter
+Xnand_a na[3:0] c[3:0] s_a[3:0] nand2
+Xnand_b a[3:0] n_c[3:0] s_b[3:0] nand2
+Xnand_c s_a[3:0] s_b[3:0] s[3:0] nand2
+Xbuf G_out constant0
+//Xpfa_set a[3:0] b[3:0] c[3:0] p[3:0] s[3:0] PC_PFAa
+.ends
+
+*************
+**CLA_block4*
+*************
+*4_block carry lookahead logic: inputs (c0,a,b) outputs (P_out,G_out)
+*for high order bits   G = 0
+.subckt PC_CLA_block4h c0 c1 c2 c3 p[3:0] g[3:0] P_out G_out
+Xa2_1 p0 c0 nc1 nand2
+Xa3_1 p1 p0 c0 nc2 nand3
+Xa3_2 i4 constant0  //p2 p1 g0 i4 and3
+Xa4_1 p2 p1 p0 c0 nc3 nand4
+Xa4_2 p3 p2 p1 p0 nP_out nand4
+Xinv_a nc[3:1] nP_out c[3:1] P_out inverter
+Xa4_3 i8 constant0
+Xo4_2 G_out constant0
+.ends
+
+*4_block carry lookahead logic: inputs (c0,a,b) outputs (P_out,G_out)
+*for low order
+.subckt PC_CLA_block4l c0 c1 c2 c3 p[3:0] g[3:0] P_out G_out
+Xa2_2 p1 g0 ni1 nand2
+Xa2_3 p2 g1 ni3 nand2
+Xa2_4 p3 g2 ni6 nand2
+Xa3_2 p2 p1 g0 ni4 nand3
+Xa3_3 p3 p2 g1 ni7 nand3
+Xa4_2 p3 p2 p1 p0 nP_out nand4
+Xa4_3 p3 p2 p1 g0 ni8 nand4
+Xo2_1 g0 c1 buffer
+Xo3_1 g1 i1 nc2 nor2
+Xo4_1 g2 i3 i4 nc3 nor3
+Xo4_2 g3 i6 i7 i8 nG_out nor4
+Xinv_a ni[8:6] ni[4:3] ni1 nc[3:2] nP_out nG_out i[8:6] i[4:3] i[1] c[3:2] P_out G_out inverter
+.ends
+
+*********
+
+*2_block carry lookahead logic: inputs (c0, p[1:0] g[1:0]) outputs c[2:1] P, G
+.subckt PC_CLA_block2 c[1:0] p[1:0] g[1:0] P G
+Xa2_1 c0 p0 ni1 nand2
+Xo2_1 g0 i1 nc1 nor2
+Xa2_2 p1 g0 ni2 nand2
+Xa3_1 p1 p0 c0 ni3 nand3
+Xo3_1 g1 i2 i3 nG nor3
+Xa2_3 p0 p1 nP nand2
+Xinv_a ni[3:1] nc1 nG nP i[3:1] c1 G P inverter
+.ends
+
+**********
+**Adder***
+**********
+
+*32_bit Arithmetic Unit: inputs (A[31:0] B[31:0],ALUFN0) outputs (S[31:0], Z,V,N)
+.subckt  PC_ARITH A[31:0] B[31:0] OUT[31:0]
+Xbuf c0 constant0
+
+Xcla_add1 A[3:0] B[3:0] c0 OUT[3:0] p0 g0 PC_CLA_add4l
+Xcla_add2 A[7:4] B[7:4] c1 OUT[7:4] p1 g1 PC_CLA_add4h
+Xcla_add3 A[11:8] B[11:8] c2 OUT[11:8] p2 g2 PC_CLA_add4h
+Xcla_add4 A[15:12] B[15:12] c3 OUT[15:12] p3 g3 PC_CLA_add4h
+Xcla_add5 A[19:16] B[19:16] c4 OUT[19:16] p4 g4 PC_CLA_add4h
+Xcla_add6 A[23:20] B[23:20] c5 OUT[23:20] p5 g5 PC_CLA_add4h
+Xcla_add7 A[27:24] B[27:24] c6 OUT[27:24] p6 g6 PC_CLA_add4h
+Xcla_add8 A[31:28] B[31:28] c7 OUT[31:28] p7 g7 PC_CLA_add4h
+
+Xcla_block4_1 c0 c1 c2 c3 p[3:0] g[3:0] P_out1 G_out1 PC_CLA_block4l
+Xcla_block4_2 c4 c5 c6 c7 p[7:4] g[7:4] P_out2 G_out2 PC_CLA_block4h
+Xcla_block2_1 c4 c0 P_out2 P_out1 G_out2 G_out1 P_final G_final PC_CLA_block2
+
+.ends

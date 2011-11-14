@@ -1,0 +1,254 @@
+time = 0.0
+Shape:
+X          
+ X         
+- -        
+X -X     X 
+        X  
+          X
+      X    
+X -X   X   
+    X      
+  -X     X 
+     X     
+Matrix:
+(0,0=vdd) 0.0, 1.0, true
+(1,1=vol) 0.0, 1.0, true
+(2,0=vdd) 0.0, 0.0, false
+(2,2=vin) 0.0, 0.0, false
+(3,0=vdd) 0.0, -4.0E-12, true
+(3,2=vin) 0.0, 0.0, false
+(3,3=vout) 0.0, 5.9999999999999995E-12, true
+(3,9=xtest.1) 0.0, -1.0E-12, true
+(4,8=i(vin)) 0.0, 1.0, true
+(5,10=i(voh)) 0.0, 1.0, true
+(6,6=i(vol)) 0.0, 1.0, true
+(7,0=vdd) 0.0, 4.0E-12, true
+(7,2=vin) 0.0, 0.0, false
+(7,3=vout) 0.0, -4.0E-12, true
+(7,7=i(vdd)) 0.0, 1.0, true
+(8,4=output) 0.0, 1.0, true
+(9,2=vin) 0.0, 0.0, false
+(9,3=vout) 0.0, -1.0E-12, true
+(9,9=xtest.1) 0.0, 4.0E-12, true
+(10,5=voh) 0.0, 1.0, true
+Source vector:
+(0) 0.0, 0.0
+(1) 0.0, 0.0
+(2) 0.0, 0.0
+(3) 0.0, 0.0
+(4) 0.0, 0.0
+(5) 0.0, 0.0
+(6) 0.0, 0.0
+(7) 0.0, 0.0
+(8) 0.0, 0.0
+(9) 0.0, 0.0
+(10) 0.0, 0.0
+time = 0.0
+Shape:
+X        
+ X       
+- -      
+X -X   X 
+        X
+     X   
+X -X  X  
+  -X   X 
+    X    
+Matrix:
+(0,0=vdd) 0.0, 1.0, true
+(1,1=vol) 0.0, 1.0, true
+(2,0=vdd) 0.0, 0.0, false
+(2,2=vin) 0.0, 0.0, false
+(3,0=vdd) 0.0, -4.0E-12, true
+(3,2=vin) 0.0, 0.0, false
+(3,3=vout) 0.0, 5.9999999999999995E-12, true
+(3,7=xtest.1) 0.0, -1.0E-12, true
+(4,8=i(voh)) 0.0, 1.0, true
+(5,5=i(vol)) 0.0, 1.0, true
+(6,0=vdd) 0.0, 4.0E-12, true
+(6,2=vin) 0.0, 0.0, false
+(6,3=vout) 0.0, -4.0E-12, true
+(6,6=i(vdd)) 0.0, 1.0, true
+(7,2=vin) 0.0, 0.0, false
+(7,3=vout) 0.0, -1.0E-12, true
+(7,7=xtest.1) 0.0, 4.0E-12, true
+(8,4=voh) 0.0, 1.0, true
+Source vector:
+(0) 0.0, 0.0
+(1) 0.0, 0.0
+(2) 0.0, 0.0
+(3) 0.0, 0.0
+(4) 0.0, 0.0
+(5) 0.0, 0.0
+(6) 0.0, 0.0
+(7) 0.0, 0.0
+(8) 0.0, 0.0
+time = 0.0
+Shape:
+X          
+ X         
+- -        
+X -X     X 
+        X  
+          X
+      X    
+X -X   X   
+    X      
+  -X     X 
+     X     
+Matrix:
+(0,0=vdd) 0.0, 1.0, true
+(1,1=vol) 0.0, 1.0, true
+(2,0=vdd) 0.0, 0.0, false
+(2,2=vin) 0.0, 0.0, false
+(3,0=vdd) 0.0, -4.0E-12, true
+(3,2=vin) 0.0, 0.0, false
+(3,3=vout) 0.0, 5.9999999999999995E-12, true
+(3,9=xtest.1) 0.0, -1.0E-12, true
+(4,8=i(vin)) 0.0, 1.0, true
+(5,10=i(voh)) 0.0, 1.0, true
+(6,6=i(vol)) 0.0, 1.0, true
+(7,0=vdd) 0.0, 4.0E-12, true
+(7,2=vin) 0.0, 0.0, false
+(7,3=vout) 0.0, -4.0E-12, true
+(7,7=i(vdd)) 0.0, 1.0, true
+(8,4=output) 0.0, 1.0, true
+(9,2=vin) 0.0, 0.0, false
+(9,3=vout) 0.0, -1.0E-12, true
+(9,9=xtest.1) 0.0, 4.0E-12, true
+(10,5=voh) 0.0, 1.0, true
+Source vector:
+(0) 0.0, 0.0
+(1) 0.0, 0.0
+(2) 0.0, 0.0
+(3) 0.0, 0.0
+(4) 0.0, 0.0
+(5) 0.0, 0.0
+(6) 0.0, 0.0
+(7) 0.0, 0.0
+(8) 0.0, 0.0
+(9) 0.0, 0.0
+(10) 0.0, 0.0
+time = 0.0
+Shape:
+X          
+ X         
+- -        
+X -X     X 
+        X  
+          X
+      X    
+X -X   X   
+    X      
+  -X     X 
+     X     
+Matrix:
+(0,0=vdd) 0.0, 1.0, true
+(1,1=vol) 0.0, 1.0, true
+(2,0=vdd) 0.0, 0.0, false
+(2,2=vin) 0.0, 0.0, false
+(3,0=vdd) 0.0, -4.0E-12, true
+(3,2=vin) 0.0, 0.0, false
+(3,3=vout) 0.0, 5.9999999999999995E-12, true
+(3,9=xtest.1) 0.0, -1.0E-12, true
+(4,8=i(vin)) 0.0, 1.0, true
+(5,10=i(voh)) 0.0, 1.0, true
+(6,6=i(vol)) 0.0, 1.0, true
+(7,0=vdd) 0.0, 4.0E-12, true
+(7,2=vin) 0.0, 0.0, false
+(7,3=vout) 0.0, -4.0E-12, true
+(7,7=i(vdd)) 0.0, 1.0, true
+(8,4=output) 0.0, 1.0, true
+(9,2=vin) 0.0, 0.0, false
+(9,3=vout) 0.0, -1.0E-12, true
+(9,9=xtest.1) 0.0, 4.0E-12, true
+(10,5=voh) 0.0, 1.0, true
+Source vector:
+(0) 0.0, 0.0
+(1) 0.0, 0.0
+(2) 0.0, 0.0
+(3) 0.0, 0.0
+(4) 0.0, 0.0
+(5) 0.0, 0.0
+(6) 0.0, 0.0
+(7) 0.0, 0.0
+(8) 0.0, 0.0
+(9) 0.0, 0.0
+(10) 0.0, 0.0
+time = 0.0
+Shape:
+X             
+ X            
+  X           
+   X          
+              
+X--- XX -XX   
+X---  XX  X   
+ - -  XX      
+-       -     
+X       -X    
+X---  X   X   
+--         X  
+-  -        X 
+- -          X
+Matrix:
+(0,0=vdd) 0.0, 1.0, true
+(1,1=b) 0.0, 1.0, true
+(2,2=c) 0.0, 1.0, true
+(3,3=a) 0.0, 1.0, true
+(5,0=vdd) 0.0, 8.0E-12, true
+(5,1=b) 0.0, 0.0, false
+(5,2=c) 0.0, 0.0, false
+(5,3=a) 0.0, 0.0, false
+(5,5=i(vdd)) 0.0, 1.0, true
+(5,6=xtest.out) 0.0, -2.0E-12, true
+(5,8=xtest.xinv.a) 0.0, 0.0, false
+(5,9=xtest.xinv.z) 0.0, -2.0E-12, true
+(5,10=xtest.xup.1) 0.0, -4.0E-12, true
+(6,0=vdd) 0.0, -2.0E-12, true
+(6,1=b) 0.0, 0.0, false
+(6,2=c) 0.0, 0.0, false
+(6,3=a) 0.0, 0.0, false
+(6,6=xtest.out) 0.0, 8.0E-12, true
+(6,7=xtest.xdown.1) 0.0, -1.0E-12, true
+(6,10=xtest.xup.1) 0.0, -2.0E-12, true
+(7,1=b) 0.0, 0.0, false
+(7,3=a) 0.0, 0.0, false
+(7,6=xtest.out) 0.0, -1.0E-12, true
+(7,7=xtest.xdown.1) 0.0, 4.0E-12, true
+(8,0=vdd) 0.0, 0.0, false
+(8,8=xtest.xinv.a) 0.0, 0.0, false
+(9,0=vdd) 0.0, -2.0E-12, true
+(9,8=xtest.xinv.a) 0.0, 0.0, false
+(9,9=xtest.xinv.z) 0.0, 4.0E-12, true
+(10,0=vdd) 0.0, -4.0E-12, true
+(10,1=b) 0.0, 0.0, false
+(10,2=c) 0.0, 0.0, false
+(10,3=a) 0.0, 0.0, false
+(10,6=xtest.out) 0.0, -2.0E-12, true
+(10,10=xtest.xup.1) 0.0, 5.9999999999999995E-12, true
+(11,0=vdd) 0.0, 0.0, false
+(11,1=b) 0.0, 0.0, false
+(11,11=i(winputs#1)) 0.0, 1.0, true
+(12,0=vdd) 0.0, 0.0, false
+(12,3=a) 0.0, 0.0, false
+(12,12=i(winputs#2)) 0.0, 1.0, true
+(13,0=vdd) 0.0, 0.0, false
+(13,2=c) 0.0, 0.0, false
+(13,13=i(winputs#0)) 0.0, 1.0, true
+Source vector:
+(0) 0.0, 0.0
+(1) 0.0, 0.0
+(2) 0.0, 0.0
+(3) 0.0, 0.0
+(4) 0.0, 0.0
+(5) 0.0, 0.0
+(6) 0.0, 0.0
+(7) 0.0, 0.0
+(8) 0.0, 0.0
+(9) 0.0, 0.0
+(10) 0.0, 0.0
+(11) 0.0, 0.0
+(12) 0.0, 0.0
+(13) 0.0, 0.0

@@ -1,0 +1,107 @@
+.include "jsim/nominal.jsim"
+.include "jsim/stdcell.jsim"
+.include "lab6checkoff.jsim"
+.include "beta-pc.jsim"
+.include "beta-regfile.jsim"
+.include "beta-ctl.jsim"
+.include "beta-alu.jsim"
+
+.subckt join S T
+.connect S T
+.ends
+
+
+.subckt beta clk reset_pre irq ia[31:0] id[31:0] ma[31:0] moe mrd[31:0] wr mwd[31:0]
+
+******************
+****buffering*****
+******************
+Xbufres reset_pre reset buffer_8
+Xbufirq irq irq_p buffer_8
+Xid_buff id[31:0] id_buff[31:0] buffer_4
+Xwdsel_buff wdsel[1:0] wdsel_buff[1:0] buffer_8
+Xz_buff Z_ra Z_ra_buff buffer_4
+Xpcsel_buff pcsel[2:0] pcsel_buff[2:0] buffer_4
+Xwasel_buff wasel wasel_buff buffer_4
+Xasel_buff asel asel_buff buffer_8
+
+****Tried and dont work well
+//Xia_buff ia_pre[31:0] ia[31:0] buffer_8       //Slower
+//Xra ra_data_pre[31:0] ra_data[31:0] buffer_4   Slower
+//Xrb rb_data_pre[31:0] rb_data[31:0] buffer_4   Slower
+//Xalubuff alu_pre[31:0] alu_out[31:0] buffer_4
+//Xopb op_pre[5:0] op[5:0] buffer_4
+Xra2_buff ra2sel ra2sel_buff join      //(keep)
+Xbsel_buff bsel bsel_buff join      // (no impact)
+Xalufn_buff alufn[4:0] alufn_buff[4:0] buffer_4  //(no impact)
+
+Xincrbuf incr_pre[31:0] incr_out[31:0] buffer_4
+******************
+**Beta Sub-parts**
+******************
+
+**Program Counter
+XProgram_Counter clk reset pcsel_buff[2:0] ia[31:0] incr_pre[31:0] incr_jump[31:0] jt[31:0] pc
+
+**Control Logic
+XControl_Logic reset op[5:0] ra2sel bsel alufn[4:0] wdsel[1:0] werf moe wr Z_ra pcsel[2:0] wasel asel ctl
+
+**Register File
+XRegister_File clk werf ra2sel_buff id_buff[20:16] id_buff[15:11] id_buff[25:21] wasel_data[4:0] wdsel_data[31:0] ra_data[31:0] rb_data[31:0] regfile
+
+**Alu 
+XAlu alufn_buff[4:0] asel_data[31:0] bsel_data[31:0] alu_out[31:0] z v n alu
+
+******************
+**Accesory Logic**
+******************
+// ra2sel mux handled in XRegister_File
+**When LDR called, ADD(PC+4, 4*sxtC) calculated by alu,  A = PC+4,  B = 4*sxtC
+**Mux for bsel_mux (1) input,   chooses between sxtC and 4*sxtC  tied to asel  (BSEL = 1 when LDR)
+
+******
+**Rewire of Branch_add 
+****** 
+Xasel_muxa asel_buff#31 ra_b[30:0] incr_out[30:0] asel_data[30:0] mux2    // select between ra and incr_out
+Xasel_muxb asel_buff ra_data[31] asel_muxa asel_data[31] mux2
+Xooo asel_muxa constant0
+Xmult_sxt_mux asel_buff#32 inst[31:0] branch_add[31:0] bsel_one_in[31:0] mux2  // selects 4*sxt for Bsel_mux(1)
+Xbsel_mux bsel_buff#32 rb_data[31:0] bsel_one_in[31:0] bsel_data[31:0] mux2     //bsel mux
+Xjoin_alu_jump alu_out[31:0] incr_jump[31:0] join                //connects alu out to Pcsel_mux(1) for Beq/bne
+
+Xrab ra_data[31:0] ra_b[31:0] buffer_4
+
+
+******
+
+Xwdsel_mux wdsel_buff[0]#32 wdsel_buff[1]#32 incr_out[31:0] alu_out[31:0] mrd[31:0] 0#32 wdsel_data[31:0] mux4  //wdsel mux
+Xwasel_mux wasel_buff#5 id_buff[25:21] xp[4:0] wasel_data[4:0] mux2       // Xwasel_mux selects RC or XP with wasel
+xjoin2 alu_out[31:0] ma[31:0] join                            //connects alu out and data memory address
+xjoin3a id_buff[15:0] inst[15:0] join                               // connects id_buff[15:0] out to Bsel [15:0]
+xjoin3b id_buff[15]#16  inst[31:16] join                            // sign extends high order bits of id_buff [32:16]
+xjoin4a inst[29:0] branch_add[31:2] join  					  // shifts sign extended RC by 4
+xjoin4b branch_add[1:0] constant0                             //connects lower 2 bits for branch_add to 0
+xjoin5 rb_data[31:0] mwd[31:0] join                           // connects rb from register to data memory address
+
+** JT logic for PC
+	Xjta ra_data[31] ia[31] njt[31] nand2
+	Xinv_jt njt[31] jt[31] inverter
+	xjtb ra_data[30:2] jt[30:2] buffer
+	xjtc jt[1:0] constant0
+	
+** XP Register Constant
+Xxpa xp[4:1] constant1
+Xxpb xp[0] constant0
+
+** calculate Z_ra
+Xz_calca ra_data[7:0] ra_data[15:8] ra_data[23:16] ra_data[31:24] raz[7:0] nor4
+Xz_calcb raz[1:0] raz[3:2] raz[5:4] raz[7:6] nrbz[1:0] nand4
+Xz_calcc rbz[1] rbz[0] nZ_ra nand2
+Xinv_rz nrbz[1:0] nZ_ra rbz[1:0] Z_ra inverter
+
+Xirqop irqop[5:0] constant0
+Xirq_mux ia[31]#6 irq_p#6 id_buff[31:26] id_buff[31:26] irqop[5:0] id_buff[31:26] op[5:0] mux4
+
+.ends
+
+

@@ -1,0 +1,70 @@
+// .include "/jsim/nominal.jsim"
+// .include "/jsim/stdcell.jsim"
+// .include "/lab6pc.jsim"
+.include "/beta-pc-incr.jsim"
+
+**PC block
+.subckt pc clk reset pcsel[2:0] ia[31:0] incr_out[31:0] incr_jump[31:0] jt[31:0]
+
+** signal definition for xadr[31:0]
+	Xxadra xadr[31] constant1
+	Xxadrb xadr[30:4] constant0
+	Xxadrc xadr[3] constant1
+	Xxadrd xadr[2:0] constant0
+
+** signal definition for illop[31:0]
+	Xillopa illop[31] constant1
+	Xillopb illop[30:3] constant0
+	Xillopc illop[2] constant1
+	Xillopd illop[1:0] constant0
+	
+Xincr_in incr_out[30:0] incr_in[30:0] buffer
+Xincr_ina ia[31] incr_in[31] buffer
+Xincrj_in incr_jump[30:0] incrj_in[30:0] buffer
+Xincrj_ina ia[31] incrj_in[31] buffer 
+
+	
+** Select between xadr and pc+4 (incr_out)
+Xpc_muxa pcsel[2]#32 incr_in[31:0] xadr[31:0] pcsel_a[31:0] mux2
+
+** select rest of pc with pc[1:0]
+Xpc_muxb pcsel[1]#32 pcsel[0]#32 pcsel_a[31:0] jt[31:0] incrj_in[31:0] illop[31:0] pcres_in[31:0] mux4
+
+** Reset Mux -- when reset=1 pc = 80000000
+Xpc_reseta reset pcres_in[31] vdd pc_in[31] mux2 
+Xpc_resetb reset#31 pcres_in[30:0] 0#31 pc_in[30:0] mux2  
+
+** PC main block 
+Xpc_reg pc_in[31:0] clk#32 ia[31:0] dreg
+Xincr4 ia[31:0] incr_out[31:0] increment_4
+.ends
+
+** 4-bit incrementer   -- "Need to use full adder for 4-bit, half adders for rest, and pass through 1,2"
+.subckt increment_4 ia[31:0] incr_out[31:0]
+Xinc[31:3] b[31:3] constant0
+Xinc[2] b[2] constant1
+Xinc[1:0] b[1:0] constant0
+Xincrement ia[31:0] b[31:0] incr_out[31:0] fa32add
+.ends
+
+** 1-bit FA
+.subckt fa a b ci s co
+XAND1 a ci aci and2
+XAND2 a b  ab  and2
+XAND3 b ci bci and2
+XOR aci ab bci co or3
+XXOR1 a b abxor xor2
+XXOR2 abxor ci s xor2
+.ends
+
+** 32-bit ripple carry adder
+.subckt fa32 a[31:0] b[31:0] ci s[31:0] co
+XFA a[31:0] b[31:0] co[30:0] ci s[31:0] co[31:0] fa
+.connect co co31
+.ends
+
+**wrapper for ripple carry adder
+.subckt fa32add a[31:0] b[31:0] s[31:0]
+XFA32 a[31:0] b[31:0] 0 s[31:0] co fa32
+.ends
+	
